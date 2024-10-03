@@ -1,12 +1,11 @@
-<!-- gym_app/templates/gym_app/agregar_pago.html -->
 {% extends 'gym_app/base.html' %}
 
 {% block content %}
-<h2>Agregar Pago</h2>
-<form method="POST">
+<h1>Agregar Pago</h1>
+<form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Registrar Pago</button>
+    <button type="submit" class="btn btn-primary">Guardar Pago</button>
 </form>
-<a href="{% url 'listar_clientes' %}">Cancelar</a>
+<a href="{% url 'listar_clientes' %}">Volver a la lista de clientes</a>
 {% endblock %}

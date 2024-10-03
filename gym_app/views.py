@@ -1,8 +1,9 @@
 # gym_app/views.py
 
-from django.shortcuts import render, redirect, get_object_or_404
-from .forms import ClienteForm, PagoForm, GastoForm
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import Cliente, Pago, Gasto
+from .forms import ClienteForm, PagoForm, GastoForm
+from django.db.models import Sum
 from django.utils import timezone
 
 # Vista para agregar un cliente
@@ -16,7 +17,7 @@ def agregar_cliente(request):
         form = ClienteForm()
     return render(request, 'gym_app/agregar_cliente.html', {'form': form})
 
-# Vista para listar clientes
+# Vista para listar los clientes
 def listar_clientes(request):
     clientes = Cliente.objects.all()
     return render(request, 'gym_app/listar_clientes.html', {'clientes': clientes})
@@ -31,7 +32,7 @@ def editar_cliente(request, cliente_id):
             return redirect('listar_clientes')
     else:
         form = ClienteForm(instance=cliente)
-    return render(request, 'gym_app/editar_cliente.html', {'form': form})
+    return render(request, 'gym_app/editar_cliente.html', {'form': form, 'cliente': cliente})
 
 # Vista para eliminar un cliente
 def eliminar_cliente(request, cliente_id):
@@ -46,7 +47,12 @@ def agregar_pago(request):
     if request.method == 'POST':
         form = PagoForm(request.POST)
         if form.is_valid():
-            form.save()
+            pago = form.save()
+            # Actualizar el estado del cliente a 'pagado' si el pago es mayor que 0
+            if pago.importe > 0:
+                cliente = pago.cliente
+                cliente.pagado = True
+                cliente.save()
             return redirect('listar_clientes')
     else:
         form = PagoForm()
@@ -63,25 +69,18 @@ def agregar_gasto(request):
         form = GastoForm()
     return render(request, 'gym_app/agregar_gasto.html', {'form': form})
 
-# Vista para mostrar balance mensual
+# Vista para mostrar el balance mensual
 def balance_mensual(request):
-    hoy = timezone.now()
-    pagos = Pago.objects.filter(mes__month=hoy.month, mes__year=hoy.year)
-    clientes = Cliente.objects.all()
-    clientes_no_pagaron = []
+    fecha_actual = timezone.now()
+    pagos = Pago.objects.filter(fecha__year=fecha_actual.year, fecha__month=fecha_actual.month).aggregate(total_pagos=Sum('importe'))
+    gastos = Gasto.objects.filter(fecha__year=fecha_actual.year, fecha__month=fecha_actual.month).aggregate(total_gastos=Sum('monto'))
 
-    for cliente in clientes:
-        if not pagos.filter(cliente=cliente).exists():
-            clientes_no_pagaron.append(cliente)
-
-    total_ingresos = sum([pago.importe for pago in pagos])
-    gastos = Gasto.objects.filter(fecha__month=hoy.month, fecha__year=hoy.year)
-    total_gastos = sum([gasto.monto for gasto in gastos])
-    balance = total_ingresos - total_gastos
+    total_pagos = pagos['total_pagos'] if pagos['total_pagos'] else 0
+    total_gastos = gastos['total_gastos'] if gastos['total_gastos'] else 0
+    balance = total_pagos - total_gastos
 
     return render(request, 'gym_app/balance_mensual.html', {
-        'total_ingresos': total_ingresos,
+        'total_pagos': total_pagos,
         'total_gastos': total_gastos,
-        'balance': balance,
-        'clientes_no_pagaron': clientes_no_pagaron
+        'balance': balance
     })

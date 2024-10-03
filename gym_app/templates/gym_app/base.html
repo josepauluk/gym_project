@@ -1,34 +1,120 @@
 <!-- gym_app/templates/gym_app/base.html -->
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gimnasio</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Gestión de Gimnasio</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'gym_app/css/styles.css' %}">
     <style>
-        body {
-            padding: 20px;
-            background-color: #f8f9fa;
+        /* Estilos básicos para el menú */
+        nav {
+            background-color: #333;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
         }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav ul li a:hover {
+            color: #00aced;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
         .container {
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 20px;
             padding: 20px;
             background: white;
             border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
         }
     </style>
 </head>
 <body>
+    <nav>
+        <ul>
+            <li><a href="{% url 'listar_clientes' %}">Listar Clientes</a></li>
+            <li><a href="{% url 'agregar_cliente' %}">Agregar Cliente</a></li>
+            <li><a href="{% url 'agregar_pago' %}">Agregar Pago</a></li>
+            <li><a href="{% url 'agregar_gasto' %}">Agregar Gasto</a></li>
+            <li><a href="{% url 'balance_mensual' %}">Balance Mensual</a></li>
+        </ul>
+    </nav>
+
     <div class="container">
-        <h1 class="text-center">Gimnasio</h1>
-        <nav class="nav">
-            <a class="nav-link" href="{% url 'agregar_cliente' %}">Agregar Cliente</a>
-            <a class="nav-link" href="{% url 'agregar_pago' %}">Agregar Pago</a>
-            <a class="nav-link" href="{% url 'agregar_gasto' %}">Agregar Gasto</a>
-            <a class="nav-link" href="{% url 'balance_mensual' %}">Balance Mensual</a>
-        </nav>
-        <hr>
         {% block content %}
         {% endblock %}
     </div>

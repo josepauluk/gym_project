@@ -2,15 +2,14 @@
 
 {% block content %}
 <h1>Lista de Clientes</h1>
-<table>
+<table class="table">
     <thead>
         <tr>
             <th>ID</th>
             <th>Nombre</th>
             <th>Apellido</th>
-            <th>Dirección</th>
             <th>Teléfono</th>
-            <th>Correo Electrónico</th>
+            <th>Pagado</th>
             <th>Acciones</th>
         </tr>
     </thead>
@@ -20,16 +19,15 @@
             <td>{{ cliente.id }}</td>
             <td>{{ cliente.nombre }}</td>
             <td>{{ cliente.apellido }}</td>
-            <td>{{ cliente.direccion }}</td>
             <td>{{ cliente.telefono }}</td>
-            <td>{{ cliente.correo_electronico }}</td>
+            <td>{{ cliente.pagado }}</td>
             <td>
-                <a href="{% url 'editar_cliente' cliente.id %}">Editar</a>
-                <a href="{% url 'eliminar_cliente' cliente.id %}">Eliminar</a>
+                <a href="{% url 'editar_cliente' cliente.id %}" class="btn btn-warning">Editar</a>
+                <a href="{% url 'eliminar_cliente' cliente.id %}" class="btn btn-danger">Eliminar</a>
             </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
-<a href="{% url 'agregar_cliente' %}">Agregar Cliente</a>
+<a href="{% url 'agregar_cliente' %}" class="btn btn-success">Agregar Cliente</a>
 {% endblock %}
