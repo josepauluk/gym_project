@@ -1,0 +1,22 @@
+<!-- gym_app/templates/gym_app/balance_mensual.html -->
+{% extends 'gym_app/base.html' %}
+
+{% block content %}
+<h2>Balance Mensual</h2>
+<p><strong>Total Ingresos: </strong>${{ total_ingresos }}</p>
+<p><strong>Total Gastos: </strong>${{ total_gastos }}</p>
+<p><strong>Balance: </strong>${{ balance }}</p>
+
+<h3>Clientes que no han pagado este mes:</h3>
+<ul>
+    {% for cliente in clientes_no_pagaron %}
+        <li>{{ cliente.nombre }} {{ cliente.apellido }}</li>
+    {% empty %}
+        <li>No hay clientes pendientes de pago.</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'agregar_pago' %}">Agregar Pago</a>
+<a href="{% url 'agregar_gasto' %}">Agregar Gasto</a>
+<a href="{% url 'agregar_cliente' %}">Agregar Cliente</a>
+{% endblock %}

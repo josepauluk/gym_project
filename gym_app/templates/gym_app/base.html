@@ -1,0 +1,36 @@
+<!-- gym_app/templates/gym_app/base.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gimnasio</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            background: white;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Gimnasio</h1>
+        <nav class="nav">
+            <a class="nav-link" href="{% url 'agregar_cliente' %}">Agregar Cliente</a>
+            <a class="nav-link" href="{% url 'agregar_pago' %}">Agregar Pago</a>
+            <a class="nav-link" href="{% url 'agregar_gasto' %}">Agregar Gasto</a>
+            <a class="nav-link" href="{% url 'balance_mensual' %}">Balance Mensual</a>
+        </nav>
+        <hr>
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>
